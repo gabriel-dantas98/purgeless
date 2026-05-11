@@ -29,6 +29,14 @@ def _load_mesh_rpc(params: dict) -> dict:
     return _load_mesh(path).to_dict()
 
 
+from .segment import segment_geometric as _seg_geom
+
+
+@method("segment_geometric")
+def _seg_geom_rpc(params: dict) -> dict:
+    return _seg_geom(params["handle"]).to_dict()
+
+
 def handle_request(req: dict) -> dict:
     rpc_id = req.get("id")
     name = req.get("method")
