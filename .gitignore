@@ -1,0 +1,31 @@
+# Node
+node_modules/
+dist/
+.vite/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Python
+sidecar/.venv/
+sidecar/__pycache__/
+sidecar/**/__pycache__/
+sidecar/*.egg-info/
+sidecar/.pytest_cache/
+
+# Build artifacts
+*.dmg
+*.app
+*.exe
+
+# Output
+output/
+tmp/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
