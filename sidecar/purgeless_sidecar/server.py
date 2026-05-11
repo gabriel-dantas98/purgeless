@@ -37,6 +37,15 @@ def _seg_geom_rpc(params: dict) -> dict:
     return _seg_geom(params["handle"]).to_dict()
 
 
+from .split import split_and_export as _split
+
+
+@method("split_and_export")
+def _split_rpc(params: dict) -> dict:
+    files = _split(params["handle"], params["face_region_ids"], params["out_dir"])
+    return {"files": files}
+
+
 def handle_request(req: dict) -> dict:
     rpc_id = req.get("id")
     name = req.get("method")
