@@ -12,3 +12,12 @@ def test_unknown_method_returns_error():
     resp = handle_request(req)
     assert resp["error"]["code"] == -32601
     assert resp["id"] == 2
+
+
+def test_load_mesh_via_rpc():
+    from pathlib import Path
+    fixture = Path(__file__).parent.parent / "fixtures" / "papa_leao.3mf"
+    req = {"jsonrpc": "2.0", "id": 3, "method": "load_mesh", "params": {"path": str(fixture)}}
+    resp = handle_request(req)
+    assert "result" in resp, resp
+    assert resp["result"]["num_faces"] > 0

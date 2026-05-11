@@ -20,6 +20,15 @@ def _ping(_params: dict) -> str:
     return "pong"
 
 
+from .loader import load_mesh as _load_mesh
+
+
+@method("load_mesh")
+def _load_mesh_rpc(params: dict) -> dict:
+    path = params["path"]
+    return _load_mesh(path).to_dict()
+
+
 def handle_request(req: dict) -> dict:
     rpc_id = req.get("id")
     name = req.get("method")
