@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { DropZone } from "./components/DropZone";
 import { ActionBar } from "./components/ActionBar";
+import { Viewport, decodeGeometry } from "./components/Viewport";
 import { sidecar, type MeshInfo, type SegmentResult } from "./ipc/sidecar";
 import "./styles.css";
+
+type Geometry = { vertices: Float32Array; faces: Uint32Array };
 
 export default function App() {
   const [path, setPath] = useState<string | null>(null);
   const [info, setInfo] = useState<MeshInfo | null>(null);
   const [seg, setSeg] = useState<SegmentResult | null>(null);
+  const [geom, setGeom] = useState<Geometry | null>(null);
   const [status, setStatus] = useState<string>("idle");
 
   async function handlePath(p: string) {
@@ -17,6 +21,9 @@ export default function App() {
       const i = await sidecar.loadMesh(p);
       setInfo(i);
       setSeg(null);
+      setStatus("loading geometry...");
+      const g = await sidecar.getGeometry(i.handle);
+      setGeom(decodeGeometry(g));
       setStatus(`loaded ${i.num_faces} faces · ${i.num_vertices} verts`);
     } catch (e) {
       setStatus(`load error: ${String(e)}`);
@@ -49,22 +56,29 @@ export default function App() {
 
   return (
     <main className="app">
-      <h1>purgeless</h1>
-      <ActionBar
-        onPath={handlePath}
-        onSegment={handleSegment}
-        onExport={handleExport}
-        canSegment={!!info}
-        canExport={!!seg}
-      />
-      <DropZone onPath={handlePath} />
-      {path && <p className="path">Path: {path}</p>}
-      {info && (
-        <p className="path">
-          {info.num_faces} faces · {info.num_vertices} verts · color: {String(info.has_color)}
-        </p>
-      )}
-      <p className="status">{status}</p>
+      <header className="topbar">
+        <h1>purgeless</h1>
+        <ActionBar
+          onPath={handlePath}
+          onSegment={handleSegment}
+          onExport={handleExport}
+          canSegment={!!info}
+          canExport={!!seg}
+        />
+      </header>
+      <div className="body">
+        <Viewport geometry={geom} faceRegionIds={seg?.face_region_ids ?? null} />
+        <aside className="side">
+          <DropZone onPath={handlePath} />
+          {path && <p className="path">Path: {path}</p>}
+          {info && (
+            <p className="path">
+              {info.num_faces} faces · {info.num_vertices} verts
+            </p>
+          )}
+          <p className="status">{status}</p>
+        </aside>
+      </div>
     </main>
   );
 }

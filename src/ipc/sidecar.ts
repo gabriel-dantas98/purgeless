@@ -29,4 +29,11 @@ export const sidecar = {
       face_region_ids: faceRegionIds,
       out_dir: outDir,
     }),
+  getGeometry: (handle: string) =>
+    rpc<{
+      vertices_b64: string;
+      faces_b64: string;
+      num_vertices: number;
+      num_faces: number;
+    }>("get_geometry", { handle }),
 };

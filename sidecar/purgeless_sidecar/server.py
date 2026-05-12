@@ -46,6 +46,24 @@ def _split_rpc(params: dict) -> dict:
     return {"files": files}
 
 
+import base64
+import numpy as np
+from .types import get as _get_mesh
+
+
+@method("get_geometry")
+def _get_geometry_rpc(params: dict) -> dict:
+    mesh = _get_mesh(params["handle"])
+    verts = np.asarray(mesh.vertices, dtype=np.float32)
+    faces = np.asarray(mesh.faces, dtype=np.uint32)
+    return {
+        "vertices_b64": base64.b64encode(verts.tobytes()).decode("ascii"),
+        "faces_b64": base64.b64encode(faces.tobytes()).decode("ascii"),
+        "num_vertices": int(len(verts)),
+        "num_faces": int(len(faces)),
+    }
+
+
 def handle_request(req: dict) -> dict:
     rpc_id = req.get("id")
     name = req.get("method")
