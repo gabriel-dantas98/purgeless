@@ -17,6 +17,7 @@ async fn rpc(method: String, params: serde_json::Value) -> Result<serde_json::Va
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let resource_dir = app.path().resource_dir().ok();
             // Dev mode: sidecar lives at <repo>/sidecar relative to CARGO_MANIFEST_DIR.
