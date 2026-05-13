@@ -111,6 +111,44 @@ def _segment_semantic_rpc(params: dict) -> dict:
     return _segment_semantic(handle, sam=sam, num_views=num_views, image_size=image_size).to_dict()
 
 
+from .paint import paint_brush as _paint_brush, paint_flood as _paint_flood, regions_merge as _regions_merge
+
+
+@method("paint_brush")
+def _paint_brush_rpc(params: dict) -> dict:
+    new_ids, touched = _paint_brush(
+        params["handle"],
+        list(params["current_regions"]),
+        int(params["face_id"]),
+        int(params["brush_radius"]),
+        int(params["region_id"]),
+    )
+    return {"face_region_ids": new_ids, "touched": touched}
+
+
+@method("paint_flood")
+def _paint_flood_rpc(params: dict) -> dict:
+    new_ids, touched = _paint_flood(
+        params["handle"],
+        list(params["current_regions"]),
+        int(params["face_id"]),
+        float(params["angle_tolerance_deg"]),
+        int(params["region_id"]),
+    )
+    return {"face_region_ids": new_ids, "touched": touched}
+
+
+@method("regions_merge")
+def _regions_merge_rpc(params: dict) -> dict:
+    return {
+        "face_region_ids": _regions_merge(
+            list(params["face_region_ids"]),
+            int(params["src_id"]),
+            int(params["dst_id"]),
+        )
+    }
+
+
 from .ai.download import download_with_progress, default_checkpoint_path, DEFAULT_URL
 
 
