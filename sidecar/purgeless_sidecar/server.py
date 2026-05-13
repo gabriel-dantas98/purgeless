@@ -75,6 +75,32 @@ def _get_geometry_rpc(params: dict) -> dict:
     }
 
 
+from .segment_ai import segment_semantic as _segment_semantic
+from .ai.sam2_wrapper import MockSam2, Sam2Wrapper
+import os as _os
+
+
+@method("segment_semantic")
+def _segment_semantic_rpc(params: dict) -> dict:
+    handle = params["handle"]
+    num_views = int(params.get("num_views", 12))
+    image_size = int(params.get("image_size", 512))
+    use_mock = params.get("mock", False) or _os.environ.get("PURGELESS_MOCK_SAM") == "1"
+    if use_mock:
+        sam = MockSam2(num_masks=int(params.get("mock_masks", 4)))
+    else:
+        ckpt = _os.environ.get("PURGELESS_SAM2_CKPT")
+        if not ckpt:
+            return {
+                "_error_hint": "no_checkpoint",
+                "face_region_ids": [],
+                "num_regions": 0,
+                "debug_view_count": 0,
+            }
+        sam = Sam2Wrapper(checkpoint_path=ckpt)
+    return _segment_semantic(handle, sam=sam, num_views=num_views, image_size=image_size).to_dict()
+
+
 def handle_request(req: dict) -> dict:
     started = time.perf_counter()
     rpc_id = req.get("id")
