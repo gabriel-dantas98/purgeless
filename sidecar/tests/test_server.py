@@ -12,6 +12,7 @@ def test_unknown_method_returns_error():
     resp = handle_request(req)
     assert resp["error"]["code"] == -32601
     assert resp["id"] == 2
+    assert resp["error"]["data"]["method"] == "does_not_exist"
 
 
 def test_load_mesh_via_rpc():
@@ -21,3 +22,13 @@ def test_load_mesh_via_rpc():
     resp = handle_request(req)
     assert "result" in resp, resp
     assert resp["result"]["num_faces"] > 0
+
+
+def test_rpc_error_includes_method_exception_type_and_traceback():
+    req = {"jsonrpc": "2.0", "id": 4, "method": "load_mesh", "params": {}}
+    resp = handle_request(req)
+
+    assert resp["error"]["code"] == -32000
+    assert resp["error"]["data"]["method"] == "load_mesh"
+    assert resp["error"]["data"]["exception_type"] == "KeyError"
+    assert "Traceback" in resp["error"]["data"]["traceback"]

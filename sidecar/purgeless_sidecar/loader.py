@@ -17,6 +17,7 @@ def load_mesh(path: str) -> MeshInfo:
             raise ValueError(f"Unsupported mesh type: {type(scene_or_mesh)}")
     else:
         mesh = scene_or_mesh
+    mesh.merge_vertices()
     handle = register(mesh)
     bbox = mesh.bounds  # shape (2, 3): [min, max]
     has_color = (
