@@ -4,9 +4,19 @@ import json
 import sys
 import time
 import traceback
+from pathlib import Path
 from typing import Any, Callable
 
 METHODS: dict[str, Callable[[dict], Any]] = {}
+
+_STDOUT = sys.stdout
+
+
+def notify(method_name: str, params: dict) -> None:
+    """Send a JSON-RPC notification (no id) to the client."""
+    msg = {"jsonrpc": "2.0", "method": method_name, "params": params}
+    _STDOUT.write(json.dumps(msg) + "\n")
+    _STDOUT.flush()
 
 
 def log_event(event: str, **fields: Any) -> None:
@@ -101,6 +111,21 @@ def _segment_semantic_rpc(params: dict) -> dict:
     return _segment_semantic(handle, sam=sam, num_views=num_views, image_size=image_size).to_dict()
 
 
+from .ai.download import download_with_progress, default_checkpoint_path, DEFAULT_URL
+
+
+@method("download_sam2")
+def _download_sam2_rpc(params: dict) -> dict:
+    dest = Path(params.get("dest") or default_checkpoint_path())
+    url = params.get("url") or DEFAULT_URL
+
+    def on_pct(p: float) -> None:
+        notify("progress", {"task": "download_sam2", "pct": p})
+
+    download_with_progress(source=url, dest=dest, on_progress=on_pct)
+    return {"path": str(dest)}
+
+
 def handle_request(req: dict) -> dict:
     started = time.perf_counter()
     rpc_id = req.get("id")
@@ -154,6 +179,8 @@ def handle_request(req: dict) -> dict:
 
 def serve(stdin=sys.stdin, stdout=sys.stdout) -> None:
     """Read newline-delimited JSON requests, write responses."""
+    global _STDOUT
+    _STDOUT = stdout
     for line in stdin:
         line = line.strip()
         if not line:
