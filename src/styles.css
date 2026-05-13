@@ -38,3 +38,9 @@ body { font-family: ui-sans-serif, system-ui, sans-serif; background: #0a0a0a; c
 .region-name:focus { outline: 1px solid #333; }
 .region-count { font-family: ui-monospace, monospace; opacity: 0.5; text-align: right; }
 .region-merge { background: #111; color: #aaa; border: 1px solid #222; font-size: 11px; padding: 2px; border-radius: 4px; }
+.actionbar .divider { width: 1px; height: 20px; background: #2a2a2a; margin: 0 4px; }
+.actionbar .toggle.on { background: #2a1740; border-color: #a78bfa; color: #fff; }
+.radius { display: flex; align-items: center; gap: 6px; font-family: ui-monospace, monospace; font-size: 11px; opacity: 0.8; }
+.radius input[type="range"] { width: 80px; }
+.radius span { width: 18px; text-align: right; }
+.viewport.painting { cursor: crosshair; }
