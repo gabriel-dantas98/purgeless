@@ -31,11 +31,8 @@ pub fn run() {
 
             let cwd = dev_sidecar_cwd.to_string_lossy().into_owned();
             eprintln!("[purgeless] spawning sidecar with cwd={cwd}");
-            tauri::async_runtime::spawn(async move {
-                if let Err(e) = sidecar::init(&cwd).await {
-                    eprintln!("sidecar init failed: {e}");
-                }
-            });
+            let handle = app.handle().clone();
+            tauri::async_runtime::block_on(sidecar::init(&cwd, handle))?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![greet, rpc])
