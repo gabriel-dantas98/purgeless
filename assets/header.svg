@@ -92,9 +92,13 @@
         <text x="348" y="15" text-anchor="middle" fill="#a3a3a3">open3d</text>
       </g>
       <g>
-        <rect x="400" y="0" width="86" height="22" rx="4" fill="#1a0d0d" stroke="#7f1d1d"/>
-        <circle cx="414" cy="11" r="3" fill="#ef4444"/>
-        <text x="448" y="15" text-anchor="middle" fill="#fca5a5">v0.1</text>
+        <rect x="400" y="0" width="84" height="22" rx="4" fill="#171717" stroke="#262626"/>
+        <text x="442" y="15" text-anchor="middle" fill="#a3a3a3">sam2</text>
+      </g>
+      <g>
+        <rect x="494" y="0" width="86" height="22" rx="4" fill="#1a0d0d" stroke="#7f1d1d"/>
+        <circle cx="508" cy="11" r="3" fill="#ef4444"/>
+        <text x="542" y="15" text-anchor="middle" fill="#fca5a5">v0.2</text>
       </g>
     </g>
   </g>
