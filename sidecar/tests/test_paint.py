@@ -57,3 +57,20 @@ def test_flood_loose_tolerance_paints_everything():
     initial = [0] * len(cube.faces)
     new_ids, touched = paint_flood(handle, initial, face_id=0, angle_tolerance_deg=180.0, region_id=9)
     assert touched == len(cube.faces)
+
+
+def test_merge_renumbers_densely():
+    from purgeless_sidecar.paint import regions_merge
+
+    initial = [0, 0, 2, 3, 4, 1]
+    out = regions_merge(initial, src_id=2, dst_id=0)
+    assert sorted(set(out)) == [0, 1, 2, 3]
+    assert out[2] == out[0]
+
+
+def test_merge_no_op_when_src_absent():
+    from purgeless_sidecar.paint import regions_merge
+
+    initial = [0, 0, 1, 1, 2, 2]
+    out = regions_merge(initial, src_id=99, dst_id=0)
+    assert out == [0, 0, 1, 1, 2, 2]
