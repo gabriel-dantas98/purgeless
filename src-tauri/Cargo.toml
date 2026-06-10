@@ -1,8 +1,10 @@
 [package]
 name = "purgeless"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+version = "0.2.0"
+description = "Prepare AI-generated 3D meshes for multi-color printing without AMS purge waste"
+authors = ["Gabriel Dantas <gabsdevops@gmail.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/gabriel-dantas98/purgeless"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

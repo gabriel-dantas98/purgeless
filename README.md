@@ -12,54 +12,71 @@
   <em>Multi-part split or AMS-optimized 3MF, your choice.</em>
 </p>
 
+<p align="center">
+  <a href="./LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
+  <img alt="Platform: macOS" src="https://img.shields.io/badge/platform-macOS-lightgrey.svg">
+  <img alt="Status: v0.2" src="https://img.shields.io/badge/status-v0.2-a78bfa.svg">
+</p>
+
 ---
 
 ## Why
 
-Generative AI creates meshes optimized for visuals, not for fabrication. Tools like Tripo, Meshy, Rodin, Hunyuan3D and Trellis spit out gorgeous figurines that print like garbage on a Bambu AMS — rios de filamento desperdiçados em purge.
+Generative AI builds meshes for looks, not for fabrication. Tools like Tripo, Meshy,
+Rodin, Hunyuan3D, and Trellis hand you a gorgeous figurine that prints like garbage on a
+Bambu AMS. Every color change dumps filament into purge.
 
-`purgeless` is the missing step between **"AI gave me a model"** and **"I press print"**.
+`purgeless` is the step between **"AI gave me a model"** and **"I press print"**.
 
 ## What v0.1 does
 
 - Loads `.stl`, `.3mf`, `.glb`, `.obj`, `.fbx`
-- Renders mesh in a 3D viewport (orbit / zoom)
+- Renders the mesh in a 3D viewport (orbit / zoom)
 - Geometric segmentation via connected components
 - Color-codes each region in the viewport
-- Exports one STL per region — drop straight into Bambu Studio
+- Exports one STL per region, ready to drop into Bambu Studio
 
-Out of scope for v0.1: AI semantic segmentation, manual painting, AMS-optimize mode, procedural connectors. See the [design spec](https://github.com/gabsdevops/gdantas-control-plane/blob/main/docs/superpowers/specs/2026-05-11-purgeless-design.md) for the full roadmap.
+AI semantic segmentation, manual painting, AMS-optimize mode, and procedural connectors
+landed later or are still planned — see the [roadmap](./ROADMAP.md).
 
 ## What v0.2 adds
 
-- **AI segment**: multi-view SAM2 (12 views) + face back-projection produces semantic regions automatically. First call downloads ~155MB of SAM2 weights into `~/Library/Application Support/purgeless/models/`. Run with `PURGELESS_MOCK_SAM=1` to skip the real model during dev.
-- **Brush** and **Flood** paint modes on the 3D viewport — click-drag to assign faces to the active region; `[` and `]` resize the brush.
-- **RegionsPanel**: rename, merge, and select regions. Cmd+Z undoes the last operation (brush, flood, merge, rename, add).
+- **AI segment**: multi-view SAM2 (12 views) plus face back-projection produces semantic
+  regions automatically. The first call downloads ~155 MB of SAM2 weights into
+  `~/Library/Application Support/purgeless/models/`. Set `PURGELESS_MOCK_SAM=1` to skip
+  the real model during dev.
+- **Brush** and **Flood** paint modes on the viewport — click-drag to assign faces to the
+  active region; `[` and `]` resize the brush.
+- **RegionsPanel**: rename, merge, and select regions. Cmd+Z undoes the last operation
+  (brush, flood, merge, rename, add).
 
-If `pyrender` can't initialize a GL context on your machine, install with the OSMesa software backend:
+If `pyrender` can't initialize a GL context on your machine, install the OSMesa software
+backend and force it on:
 
 ```bash
-cd sidecar && uv pip install 'pyrender[osmesa]'
+cd sidecar && uv pip install 'pyrender[osmesa]'   # then run with PURGELESS_HEADLESS=1
 ```
-
-Then run with `PURGELESS_HEADLESS=1` to force the OSMesa backend.
 
 ### Known v0.2 limitations
 
-- **AI segment crashes on second call** in the same sidecar process (pyglet/Cocoa GL context can't be re-created on macOS). Workaround: restart the app between AI segment runs. Fix planned for v0.2.1 via singleton renderer or moderngl swap.
+- **AI segment crashes on the second call** in the same sidecar process. The Cocoa GL
+  context can't be recreated on macOS, so restart the app between AI runs for now. Fix
+  planned for v0.2.1 via a singleton renderer or a moderngl swap.
 
 ## Quickstart
 
+Install the [prerequisites](./CONTRIBUTING.md#prerequisites) (Node ≥ 20, pnpm, Rust, uv),
+then:
+
 ```bash
-# 1. Install JS deps
-pnpm install
-
-# 2. Bootstrap the Python sidecar venv
-cd sidecar && uv sync && cd ..
-
-# 3. Run the app (first build takes ~2min for Rust)
-pnpm tauri dev
+git clone https://github.com/gabriel-dantas98/purgeless.git
+cd purgeless
+make bootstrap   # checks prereqs, installs JS deps, syncs the Python venv
+make dev         # runs the app (first build compiles Rust, ~2 min)
 ```
+
+No `make`? The same two steps are `pnpm bootstrap` then `pnpm tauri dev`. Run
+`make doctor` any time to check your toolchain.
 
 Try it on the bundled fixture: `sidecar/fixtures/papa_leao.3mf`.
 
@@ -73,25 +90,23 @@ Try it on the bundled fixture: `sidecar/fixtures/papa_leao.3mf`.
 | Sidecar | Python 3.11 + trimesh + open3d + manifold3d + numpy |
 | IPC | JSON-RPC over stdio |
 
-## Tests
+## Contributing
+
+Setup, the dev loop, architecture, and conventions live in
+**[CONTRIBUTING.md](./CONTRIBUTING.md)**. The short version:
 
 ```bash
-# Python sidecar
-cd sidecar && uv run pytest -v
-
-# TypeScript typecheck
-pnpm exec tsc --noEmit
-
-# Rust
-cd src-tauri && cargo check
+make check   # typecheck (TS) + cargo check (Rust) + pytest (Python) — run before a PR
 ```
+
+Found a model that segments badly, or a printer setup we haven't covered? Open an issue.
 
 ## License
 
-TBD — likely Apache-2.0. Not OSS yet.
+[Apache-2.0](./LICENSE).
 
 ---
 
 <p align="center">
-  Part of the <a href="https://github.com/gabsdevops/gdantas-control-plane">gdantas control-plane</a> · made by <a href="https://gdantas.com.br">Gabriel Dantas</a>
+  made by <a href="https://gdantas.com.br">Gabriel Dantas</a>
 </p>
