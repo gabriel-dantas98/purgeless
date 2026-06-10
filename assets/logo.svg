@@ -1,68 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="purgeless logo">
   <title>purgeless</title>
+  <desc>A model cleaved into two clean color parts, joined at a single connector node — clean color separation, zero purge.</desc>
   <defs>
-    <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
-    </radialGradient>
-    <style>
-      .bg { fill: #0a0a0a; }
-      .corner { fill: none; stroke: #525252; stroke-width: 1; }
-      .grid { stroke: #1a1a1a; stroke-width: 1; fill: none; }
-      .edge { stroke: #404040; stroke-width: 1; fill: none; }
-      .label { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 9px; fill: #525252; letter-spacing: 0.5px; }
-    </style>
+    <clipPath id="tile"><rect x="48" y="48" width="160" height="160" rx="26"/></clipPath>
   </defs>
 
-  <!-- background + corner brackets -->
-  <rect class="bg" width="256" height="256" rx="28"/>
-  <path class="corner" d="M16 28 V16 H28"/>
-  <path class="corner" d="M228 16 H240 V28"/>
-  <path class="corner" d="M240 228 V240 H228"/>
-  <path class="corner" d="M28 240 H16 V228"/>
+  <!-- dark rounded tile -->
+  <rect width="256" height="256" rx="56" fill="#0a0a0a"/>
 
-  <!-- glow halo behind the figurine -->
-  <circle cx="128" cy="128" r="84" fill="url(#hubGlow)"/>
-
-  <!-- abstract figurine, split into 4 colored regions (head, body, mantle, base) -->
-  <g transform="translate(128, 128)">
-    <!-- guide rings (subtle) -->
-    <circle r="74" class="edge" opacity="0.35" stroke-dasharray="2 6"/>
-
-    <!-- BASE / pedestal — green -->
-    <path
-      d="M -40 56 Q -40 64 -32 64 L 32 64 Q 40 64 40 56 L 36 38 L -36 38 Z"
-      fill="#22c55e" stroke="#0a0a0a" stroke-width="2"/>
-
-    <!-- BODY / robe — cyan -->
-    <path
-      d="M -34 38 L -28 -4 Q -26 -10 -20 -10 L 20 -10 Q 26 -10 28 -4 L 34 38 Z"
-      fill="#06b6d4" stroke="#0a0a0a" stroke-width="2"/>
-
-    <!-- MANTLE / shoulder cape — violet (the accent) -->
-    <path
-      d="M -32 -2 Q -28 -28 -10 -32 L 10 -32 Q 28 -28 32 -2 L 28 -6 Q 20 -22 0 -22 Q -20 -22 -28 -6 Z"
-      fill="#a78bfa" stroke="#0a0a0a" stroke-width="2"/>
-
-    <!-- HEAD — warm amber -->
-    <circle cx="0" cy="-44" r="18"
-      fill="#fbbf24" stroke="#0a0a0a" stroke-width="2"/>
-
-    <!-- HALO / crown ring — thin pink mark -->
-    <ellipse cx="0" cy="-62" rx="22" ry="5"
-      fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.9"/>
-
-    <!-- cut-plane indicators: dashed horizontal lines at each split -->
-    <line x1="-60" y1="-26" x2="60" y2="-26" stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
-    <line x1="-60" y1="-2"  x2="60" y2="-2"  stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
-    <line x1="-60" y1="38"  x2="60" y2="38"  stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
-
-    <!-- tick markers on right gutter -->
-    <g transform="translate(58, 0)" class="label">
-      <text x="0" y="-42">01</text>
-      <text x="0" y="-18">02</text>
-      <text x="0" y="6">03</text>
-      <text x="0" y="46">04</text>
-    </g>
+  <!-- the model, cleaved along a clean diagonal into two color parts -->
+  <g clip-path="url(#tile)">
+    <!-- upper-left part, nudged up-left to open a crisp kerf along the seam -->
+    <polygon points="45,45 205,45 45,205" fill="#a78bfa"/>
+    <!-- lower-right part, nudged down-right -->
+    <polygon points="211,51 211,211 51,211" fill="#06b6d4"/>
   </g>
+
+  <!-- connector node straddling the seam: the parts rejoin, the cut is clean -->
+  <circle cx="128" cy="128" r="11" fill="#0a0a0a"/>
+  <circle cx="128" cy="128" r="11" fill="none" stroke="#fafafa" stroke-width="2.5"/>
 </svg>

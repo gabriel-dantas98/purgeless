@@ -12,6 +12,7 @@
     <pattern id="grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
       <path d="M32 0 L0 0 0 32" fill="none" stroke="#171717" stroke-width="1"/>
     </pattern>
+    <clipPath id="emblem"><rect x="48" y="48" width="160" height="160" rx="26"/></clipPath>
     <style>
       .mono { font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
       .title    { font-size: 64px; font-weight: 600; fill: #fafafa; letter-spacing: -1.5px; }
@@ -39,35 +40,18 @@
     <!-- glow -->
     <circle cx="128" cy="128" r="80" fill="url(#hubGlow)"/>
 
-    <!-- figurine, split into colored regions -->
-    <g transform="translate(128, 128)">
-      <!-- BASE — green -->
-      <path
-        d="M -40 56 Q -40 64 -32 64 L 32 64 Q 40 64 40 56 L 36 38 L -36 38 Z"
-        fill="#22c55e" stroke="#0a0a0a" stroke-width="2"/>
-      <!-- BODY — cyan -->
-      <path
-        d="M -34 38 L -28 -4 Q -26 -10 -20 -10 L 20 -10 Q 26 -10 28 -4 L 34 38 Z"
-        fill="#06b6d4" stroke="#0a0a0a" stroke-width="2"/>
-      <!-- MANTLE — violet -->
-      <path
-        d="M -32 -2 Q -28 -28 -10 -32 L 10 -32 Q 28 -28 32 -2 L 28 -6 Q 20 -22 0 -22 Q -20 -22 -28 -6 Z"
-        fill="#a78bfa" stroke="#0a0a0a" stroke-width="2"/>
-      <!-- HEAD — amber -->
-      <circle cx="0" cy="-44" r="18" fill="#fbbf24" stroke="#0a0a0a" stroke-width="2"/>
-      <!-- HALO — pink -->
-      <ellipse cx="0" cy="-62" rx="22" ry="5" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.9"/>
-
-      <!-- cut planes -->
-      <line x1="-60" y1="-26" x2="60" y2="-26" stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
-      <line x1="-60" y1="-2"  x2="60" y2="-2"  stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
-      <line x1="-60" y1="38"  x2="60" y2="38"  stroke="#525252" stroke-width="0.75" stroke-dasharray="3 3" opacity="0.7"/>
+    <!-- cleave glyph: model split into two clean color parts, joined at a connector node -->
+    <g clip-path="url(#emblem)">
+      <polygon points="45,45 205,45 45,205" fill="#a78bfa"/>
+      <polygon points="211,51 211,211 51,211" fill="#06b6d4"/>
     </g>
+    <circle cx="128" cy="128" r="11" fill="#0a0a0a"/>
+    <circle cx="128" cy="128" r="11" fill="none" stroke="#fafafa" stroke-width="2.5"/>
   </g>
 
   <!-- =================== CENTER: TYPE =================== -->
   <g transform="translate(360, 0)">
-    <text class="mono prompt"  x="0" y="120">~ $ purgeless ./papa_leao.3mf</text>
+    <text class="mono prompt"  x="0" y="120">~ $ purgeless ./model.3mf</text>
     <text class="mono title"   x="0" y="178">
       <tspan class="accent">purge</tspan><tspan fill="#fafafa">less</tspan>
     </text>
@@ -104,36 +88,36 @@
   </g>
 
   <!-- =================== RIGHT: COLOR SWATCHES + REGION LEGEND =================== -->
-  <g transform="translate(900, 70)">
+  <g transform="translate(844, 70)">
     <text class="mono swatch-label" x="0" y="-8">// regions</text>
     <!-- 5 swatches, each = a detected color region -->
     <g>
       <rect x="0"   y="0" width="56" height="56" rx="6" fill="#ec4899"/>
-      <text class="mono swatch-label" x="0" y="76">01 halo</text>
+      <text class="mono swatch-label" x="0" y="76">region 01</text>
     </g>
     <g transform="translate(72, 0)">
       <rect x="0" y="0" width="56" height="56" rx="6" fill="#fbbf24"/>
-      <text class="mono swatch-label" x="0" y="76">02 head</text>
+      <text class="mono swatch-label" x="0" y="76">region 02</text>
     </g>
     <g transform="translate(144, 0)">
       <rect x="0" y="0" width="56" height="56" rx="6" fill="#a78bfa"/>
-      <text class="mono swatch-label" x="0" y="76">03 mantle</text>
+      <text class="mono swatch-label" x="0" y="76">region 03</text>
     </g>
     <g transform="translate(216, 0)">
       <rect x="0" y="0" width="56" height="56" rx="6" fill="#06b6d4"/>
-      <text class="mono swatch-label" x="0" y="76">04 body</text>
+      <text class="mono swatch-label" x="0" y="76">region 04</text>
     </g>
     <g transform="translate(288, 0)">
       <rect x="0" y="0" width="56" height="56" rx="6" fill="#22c55e"/>
-      <text class="mono swatch-label" x="0" y="76">05 base</text>
+      <text class="mono swatch-label" x="0" y="76">region 05</text>
     </g>
 
-    <!-- dotted connectors hinting at the export step -->
+    <!-- export step, kept short so it clears the right-edge fade -->
     <g transform="translate(0, 110)" class="mono swatch-label">
-      <text x="0" y="0">→ region_01.stl  region_02.stl  region_03.stl  region_04.stl  region_05.stl</text>
+      <text x="0" y="0">→ region_01–05.stl · 5 printable parts</text>
     </g>
   </g>
 
-  <!-- right-edge fade -->
-  <rect x="1100" y="0" width="180" height="320" fill="url(#fadeRight)"/>
+  <!-- right-edge fade (pulled to the edge so it doesn't dim the swatches) -->
+  <rect x="1200" y="0" width="80" height="320" fill="url(#fadeRight)"/>
 </svg>
